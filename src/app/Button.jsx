@@ -12,4 +12,4 @@ const Button = ({ text, className, icon, onClick, disabled }) => {
     );
 }
 
-export default Button;
+export default Button

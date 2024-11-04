@@ -33,4 +33,4 @@ const InputField = ({ name, label, type, placeholder, value, onChange, error, er
     );
 }
 
-export default InputField;
+export default InputField

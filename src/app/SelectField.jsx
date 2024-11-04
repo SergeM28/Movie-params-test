@@ -38,4 +38,4 @@ const SelectField = ({ name, label, options, value, onChange, error, errorAnimat
     );
 }
 
-export default SelectField;
+export default SelectField

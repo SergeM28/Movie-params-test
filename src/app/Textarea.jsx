@@ -18,4 +18,4 @@ const TextArea = ({ name, label, placeholder, value, onChange }) => {
     );
 }
 
-export default TextArea;
+export default TextArea
