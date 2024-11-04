@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TextArea = ({ name, label, placeholder, value, onChange }) => {
+const Textarea = ({ name, label, placeholder, value, onChange }) => {
     return (
         <div className="flex flex-col w-full">
             <label htmlFor={name} className="self-start text-base">
@@ -18,4 +18,4 @@ const TextArea = ({ name, label, placeholder, value, onChange }) => {
     );
 }
 
-export default TextArea
+export default Textarea

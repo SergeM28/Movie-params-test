@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import InputField from './InputField';
 import SelectField from './SelectField';
-import TextArea from './TextArea';
+import TextArea from './Textarea';
 import Button from './Button';
 import Pagination from './Pagination';
 
