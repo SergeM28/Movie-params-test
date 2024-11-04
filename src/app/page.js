@@ -1,101 +1,201 @@
-import Image from "next/image";
+'use client'
+import React, { useEffect, useState } from 'react';
+import InputField from './InputField';
+import SelectField from './SelectField';
+import TextArea from './TextArea';
+import Button from './Button';
+import Pagination from './Pagination';
 
-export default function Home() {
+const ProductionParamsForm = () => {
+  const initialFormState = {
+    projectName: '',
+    genre: '',
+    format: '',
+    unfNumber: '',
+    country: '',
+    estimatedCost: '',
+    synopsis: '',
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+  const [errors, setErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const genres = ['Боевик', 'Драма', 'Комедия', 'Ужасы'];
+  const formats = ['Онлайн-платформа', 'Большой экран', 'Интернет', 'Другое'];
+  const countries = ['Россия', 'США', 'Франция', 'Италия'];
+
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('productionParams'));
+    const savedPage = JSON.parse(localStorage.getItem('currentPage'));
+    if (savedData) {
+      setFormData(savedData);
+    }
+    if (savedPage) {
+      setCurrentPage(savedPage);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('productionParams', JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem('currentPage', JSON.stringify(currentPage));
+  }, [currentPage]);
+
+  useEffect(() => {
+    validateForm();
+  }, [formData]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.projectName) {
+      newErrors.projectName = 'Заполните поле';
+    }
+    if (!formData.genre) {
+      newErrors.genre = 'Заполните поле';
+    }
+    if (!formData.format) {
+      newErrors.format = 'Заполните поле';
+    }
+    if (!formData.country) {
+      newErrors.country = 'Заполните поле';
+    }
+    if (formData.unfNumber && !/^\d{3}-\d{3}-\d{3}-\d{2}-\d{3}$/.test(formData.unfNumber)) {
+      newErrors.unfNumber = 'Некорректный формат УНФ';
+    }
+    if (formData.estimatedCost && isNaN(formData.estimatedCost)) {
+      newErrors.estimatedCost = 'Поле стоимость должно содержать только числа';
+    }
+    setErrors(newErrors);
+    setIsFormValid(Object.keys(newErrors).length === 0);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    validateForm();
+  };
+
+  const handleSubmit = () => {
+    if (isFormValid) {
+      setCurrentPage(2);
+    }
+  };
+
+  const handleCancel = () => {
+    localStorage.removeItem('productionParams');
+    localStorage.removeItem('currentPage');
+    setFormData(initialFormState);
+    setCurrentPage(1);
+    setErrors({});
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+    <main className="flex overflow-hidden flex-col justify-center items-center px-20 py-24 bg-white max-md:px-5 max-md:pb-24">
+      <div className="flex flex-col max-w-full">
+        <header className="flex flex-wrap gap-5 justify-between w-full tracking-tight max-md:max-w-full">
+          <h1 className="text-5xl title font-semibold leading-[58px] max-md:max-w-full max-md:text-4xl max-md:leading-[54px]">
+            Производственные <br /> параметры фильма
+          </h1>
+          <Button
+            text="Отменить заполнение"
+            className="flex w-[225px] justify-center items-center my-auto text-base text-center border border-solid border-neutral-900 border-opacity-20 min-h-[48px] rounded-[41px]"
+            onClick={handleCancel} />
+        </header>
+        <form className="mt-28 max-md:mt-10 max-md:mr-0.5 max-md:max-w-full">
+          <div className="flex gap-5 md:gap-24 max-md:flex-col">
+            <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
+              <InputField
+                name="projectName"
+                label="Название проекта"
+                type="text"
+                placeholder="Название"
+                value={formData.projectName}
+                onChange={handleChange}
+                error={errors.projectName}
+                errorAnimation={errors.projectName ? "error-animation" : ""}
+              />
+              <SelectField
+                name="genre"
+                label="Жанр"
+                options={genres}
+                placeholder="Выберите жанр"
+                value={formData.genre}
+                onChange={handleChange}
+                error={errors.genre}
+                errorAnimation={errors.genre ? "error-animation" : ""}
+              />
+              <SelectField
+                name="format"
+                label="Формат (для онлайн-платформ, большого экрана, интернета, другое)"
+                options={formats}
+                value={formData.format}
+                onChange={handleChange}
+                error={errors.format}
+                errorAnimation={errors.format ? "error-animation" : ""}
+                placeholder="Выберите формат"
+              />
+              <InputField
+                name="unfNumber"
+                label="№ УНФ или отсутствует"
+                type="text"
+                placeholder="890-000-000-00-000"
+                value={formData.unfNumber}
+                onChange={handleChange}
+                error={errors.unfNumber}
+                errorAnimation={errors.unfNumber ? "error-animation" : ""}
+              />
+            </div>
+            <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
+              <SelectField
+                name="country"
+                label="Страна-производитель (копродукция)"
+                options={countries}
+                value={formData.country}
+                onChange={handleChange}
+                error={errors.country}
+                errorAnimation={errors.country ? "error-animation" : ""}
+                placeholder="Выберите страну"
+              />
+              <InputField
+                name="estimatedCost"
+                label="Сведения о сметной стоимости производства фильма на территории Нижегородской области, если есть"
+                type="text"
+                placeholder="Сметная стоимость"
+                value={formData.estimatedCost}
+                onChange={handleChange}
+                error={errors.estimatedCost}
+                errorAnimation={errors.estimatedCost ? "error-animation" : ""}
+              />
+              <TextArea
+                name="synopsis"
+                label="Синопсис"
+                placeholder="Напишите краткое изложение"
+                value={formData.synopsis}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </form>
+        <footer className="flex relative flex-wrap gap-5 justify-between lg:justify-center self-end mt-24 max-w-full text-center w-full max-md:mt-10 max-md:mr-0.5">
+          <Pagination totalPages={4} currentPage={currentPage} />
+          <Button
+            text="Следующий шаг"
+            icon={true}
+            className={`button-next relative sm:absolute right-0 flex justify-center w-[248px] items-center text-base tracking-tight min-h-[48px] rounded-[41px] gap-4 ${isFormValid ? 'bg-zinc-100 button-active' : 'bg-[#EFEFEF] cursor-not-allowed text-[#acacac]'}`}
+            onClick={handleSubmit}
+            disabled={!isFormValid}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </main>
   );
 }
+
+export default ProductionParamsForm;

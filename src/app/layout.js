@@ -1,15 +1,30 @@
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const helveticaBold = localFont({
+  src: "./fonts/Helvetica-Bold.woff",
+  variable: "--font-helvetica-bold",
+  weight: "700",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const helvetica = localFont({
+  src: "./fonts/Helvetica-Regular.woff",
+  variable: "--font-helvetica",
+  weight: "400",
+});
+const satoshi = localFont({
+  src: "./fonts/Satoshi-Regular.woff",
+  variable: "--font-satoshi",
+  weight: "400",
+});
+const interTight = localFont({
+  src: "./fonts/InterTight-Regular.ttf",
+  variable: "--font-interTight",
+  weight: "400",
+});
+const interTightBold = localFont({
+  src: "./fonts/InterTight-SemiBold.ttf",
+  variable: "--font-interTight",
+  weight: "600",
 });
 
 export const metadata = {
@@ -20,9 +35,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${helvetica.variable} ${interTight.variable} ${interTightBold.variable} ${satoshi.variable} ${helveticaBold.variable} antialiased`}>
         {children}
       </body>
     </html>
