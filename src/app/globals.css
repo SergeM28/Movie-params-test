@@ -2,13 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-black: #1d1d1d;
-}
-
 body {
   font-family: 'Helvetica';
-  color: var(--color-black);
+  color: #1d1d1d;
 }
 
 .title {
