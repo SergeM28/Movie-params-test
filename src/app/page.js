@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import InputField from './InputField';
 import SelectField from './SelectField';
-import TextArea from './Textarea';
+import Textarea from './Textarea';
 import Button from './Button';
 import Pagination from './Pagination';
 
@@ -173,7 +173,7 @@ const ProductionParamsForm = () => {
                 error={errors.estimatedCost}
                 errorAnimation={errors.estimatedCost ? "error-animation" : ""}
               />
-              <TextArea
+              <Textarea
                 name="synopsis"
                 label="Синопсис"
                 placeholder="Напишите краткое изложение"
